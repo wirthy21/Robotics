@@ -121,15 +121,21 @@ def execute_instruction(data):
         return True
     elif data == "car_turn_around":
         qr_turn_speed = 0x5FFF
-        start_time_turn = time.time()  # Aktuelle Zeit speichern
+        start_time_turn = time.time()
+        picam2.stop()
         while time.time() - start_time_turn < 0.5:
             robot.changespeed(qr_turn_speed, qr_turn_speed)
+            robot.turnRight()
+        picam2.start()    
         return True
     elif data == "car_rotate_720":
         qr_turn_speed = 0x5FFF
-        start_time_rotate = time.time()  # Aktuelle Zeit speichern
+        start_time_rotate = time.time()
+        picam2.stop()
         while time.time() - start_time_rotate < 2:
             robot.changespeed(qr_turn_speed, qr_turn_speed)
+            robot.turnRight()
+        picam2.start()
         return True
 
     return False
