@@ -103,8 +103,9 @@ def match_with_orb(frame):
         matches = bf.match(descriptors_ref, descriptors_image)
         if matches:
             avg_distance = np.mean([m.distance for m in sorted(matches, key=lambda x: x.distance)[:10]])
-            if avg_distance < best_score:
+            if avg_distance < best_score: #and avg_distance < 50:
                 best_score, best_match = avg_distance, label
+                print("Best Score:", best_score)
 
     if best_match:
         print("Best ORB match found:", best_match)
