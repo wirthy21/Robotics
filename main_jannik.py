@@ -16,8 +16,8 @@ frame_rate = 30
 video_duration = 120
 frame_width, frame_height = 640, 480
 turn_speed = 0x5FFF
-straight_speed = 0x6FFF
-max_speed = 0x7FFF
+straight_speed = 0x5FFF
+max_speed = 0x6FFF
 
 # Initialize PID controller for line following
 pid_direction = PID(Kp=100, Ki=340, Kd=9, setpoint=frame_width // 2)
@@ -159,7 +159,7 @@ try:
             continue
         
         # Process QR codes if detected:
-        if qr_detector.detect(frame)[0]:  # True, wenn ein QR-Code erkannt wurde
+        if qr_detector.detect(frame)[0]:
             print("QR Code detected")
             robot.stopcar()
             process_qr_code(frame, qr_detector)
