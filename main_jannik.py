@@ -75,7 +75,7 @@ def process_qr_code(frame, qr_detector):
     frame = cv2.filter2D(frame, -1, np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]]))  # Schärfen
 
     data, _, _ = qr_detector.detectAndDecode(frame)
-    if data.find():
+    if data:
         print("QR Code detected:", data)
         robot.stopcar()
         return execute_instruction(data)
