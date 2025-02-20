@@ -89,9 +89,9 @@ def match_with_orb(frame):
     _, descriptors_image = orb.detectAndCompute(frame, None)
 
     reference_images = {
-        "car_rotate_720": "car_rotate_720.png",
-        "car_stop_10s": "car_stop_10s.png",
-        "car_turn_around": "car_turn_around.png"}
+        "car_rotate_720": "car_rotate_720.PNG",
+        "car_stop_10s": "car_stop_10s.PNG",
+        "car_turn_around": "car_turn_around.PNG"}
 
     best_match, best_score = None, float("inf")
     bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
