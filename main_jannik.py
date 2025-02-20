@@ -118,6 +118,7 @@ def execute_instruction(data):
 
     if data == "car_stop_10s":
         picam2.stop()
+        data = None
         time.sleep(10)
         picam2.start()
         return True
@@ -125,6 +126,7 @@ def execute_instruction(data):
         qr_turn_speed = 0x5FFF
         start_time_turn = time.time()
         picam2.stop()
+        data = None
         while time.time() - start_time_turn < 0.5:
             robot.changespeed(qr_turn_speed, qr_turn_speed)
             robot.turnRight()
@@ -134,12 +136,12 @@ def execute_instruction(data):
         qr_turn_speed = 0x5FFF
         start_time_rotate = time.time()
         picam2.stop()
+        data = None
         while time.time() - start_time_rotate < 2:
             robot.changespeed(qr_turn_speed, qr_turn_speed)
             robot.turnRight()
         picam2.start()
         return True
-
     return False
 
 
