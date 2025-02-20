@@ -27,6 +27,7 @@ pid_direction.output_limits = (-max_speed // 2, max_speed // 2)
 prev_speed_left = 0
 prev_speed_right = 0
 
+qr_detector = cv2.QRCodeDetector()
 
 def preprocess_image(frame):
     # Focus on the lower third of the frame to detect the line
@@ -69,18 +70,19 @@ def detect_duck(frame):
             return True
     return False
 
-def process_qr_code(frame):
-    qr_detector = cv2.QRCodeDetector()
+def process_qr_code(frame, qr_detector):
     frame = cv2.convertScaleAbs(frame, alpha=1.5, beta=-90)  # Kontrast erhöhen
     frame = cv2.filter2D(frame, -1, np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]]))  # Schärfen
 
     data, _, _ = qr_detector.detectAndDecode(frame)
-    if data:
-        print("QR code not readable, using ORB matching...")
-        return match_with_orb(frame)
-        #print("QR Code detected:", data)
-        #robot.stopcar()
-        #return execute_instruction(data)
+    if data.find():
+        print("QR Code detected:", data)
+        robot.stopcar()
+        return execute_instruction(data)
+        
+    print("QR code not readable, using ORB matching...")
+    robot.stopcar()
+    return match_with_orb(frame)
 
 
 def match_with_orb(frame):
@@ -141,9 +143,10 @@ try:
             robot.stopcar()
             continue
         
-        # Process QR codes if detected
-        if process_qr_code(frame):
-            continue
+        # Process QR codes if detected:
+        if qr_detector.detect(frame)[0]:  # True, wenn ein QR-Code erkannt wurde
+            if process_qr_code(frame, qr_detector):
+                continue
 
         # Preprocess the frame to find the centroid of the line
         cx = preprocess_image(frame)
