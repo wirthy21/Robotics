@@ -41,7 +41,7 @@ try:
             continue
         
         # Process QR codes if detected
-        if fj.process_qr_code(frame, robot):
+        if fj.process_qr_code(frame):
             continue
 
         # Preprocess the frame to find the centroid of the line
