@@ -16,8 +16,8 @@ frame_rate = 30
 video_duration = 120
 frame_width, frame_height = 640, 480
 turn_speed = 0x5FFF
-straight_speed = 0x5FFF
-max_speed = 0x6FFF
+straight_speed = 0x6AFF
+max_speed = 0x7FFF
 
 # Initialize PID controller for line following
 pid_direction = PID(Kp=100, Ki=340, Kd=9, setpoint=frame_width // 2)
@@ -124,21 +124,21 @@ def execute_instruction(data):
         picam2.start()
         return True
     elif data == "car_turn_around":
-        qr_turn_speed = 0x5FFF
+        qr_turn_speed = 0x6FFF
         start_time_turn = time.time()
         picam2.stop()
         data = None
-        while time.time() - start_time_turn < 1:
+        while time.time() - start_time_turn < 0.8:
             robot.changespeed(qr_turn_speed, qr_turn_speed)
             robot.turnRight()
         picam2.start()    
         return True
     elif data == "car_rotate_720":
-        qr_turn_speed = 0x5FFF
+        qr_turn_speed = 0x6FFF
         start_time_rotate = time.time()
         picam2.stop()
         data = None
-        while time.time() - start_time_rotate < 4:
+        while time.time() - start_time_rotate < 3:
             robot.changespeed(qr_turn_speed, qr_turn_speed)
             robot.turnRight()
         picam2.start()
