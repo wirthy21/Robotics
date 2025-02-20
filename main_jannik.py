@@ -7,7 +7,7 @@ from classes_jannik import Robot
 import numpy as np
 
 # Initialize the robot and camera
-# robot = Robot()
+robot = Robot()
 picam2 = Picamera2()
 picam2.start()
 
@@ -81,7 +81,7 @@ def process_qr_code(frame):
         return execute_instruction(data)
 
     print("QR code not readable, using ORB matching...")
-    Robot.stopcar()
+    robot.stopcar()
     return match_with_orb(frame)
 
 def match_with_orb(frame):
@@ -119,11 +119,11 @@ def execute_instruction(data):
         time.sleep(10)
     elif data == "car_turn_around":
         qr_turn_speed = 0x5FFF
-        Robot.changespeed(qr_turn_speed, qr_turn_speed)
+        robot.changespeed(qr_turn_speed, qr_turn_speed)
         time.sleep(0.5)
     elif data == "car_rotate_720":
         qr_turn_speed = 0x5FFF
-        Robot.changespeed(qr_turn_speed, qr_turn_speed)
+        robot.changespeed(qr_turn_speed, qr_turn_speed)
         time.sleep(2)
         return True
 
@@ -139,7 +139,7 @@ try:
         
         # Stop if a duck is detected
         if detect_duck(frame) == True:
-            Robot.stopcar()
+            robot.stopcar()
             continue
         
         # Process QR codes if detected
@@ -165,18 +165,18 @@ try:
             prev_speed_right = right_speed
 
             # Update the robot's movement
-            Robot.changespeed(left_speed, right_speed)
-            Robot.forward()
+            robot.changespeed(left_speed, right_speed)
+            robot.forward()
         else:
             # Stop and decide turning direction if no line is detected
-            Robot.stopcar()
-            Robot.changespeed(turn_speed, turn_speed)
+            robot.stopcar()
+            robot.changespeed(turn_speed, turn_speed)
             if prev_speed_left - prev_speed_right > -15000:
-                Robot.turnRight()
+                robot.turnRight()
             elif prev_speed_left - prev_speed_right < 15000:
-                Robot.turnLeft()
+                robot.turnLeft()
             else:
-                Robot.stopcar()
+                robot.stopcar()
 
         # Break the loop if 'q' is pressed
         if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -185,5 +185,5 @@ finally:
     # Cleanup resources after loop ends
     picam2.stop()
     cv2.destroyAllWindows()
-    Robot.stopcar()
+    robot.stopcar()
     print("Driving done!")
