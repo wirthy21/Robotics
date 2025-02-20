@@ -76,22 +76,21 @@ def process_qr_code(frame):
 
     data, _, _ = qr_detector.detectAndDecode(frame)
     if data:
-        print("QR Code detected:", data)
-        robot.stopcar()
-        return execute_instruction(data)
+        print("QR code not readable, using ORB matching...")
+        return match_with_orb(frame)
+        #print("QR Code detected:", data)
+        #robot.stopcar()
+        #return execute_instruction(data)
 
-    print("QR code not readable, using ORB matching...")
-    robot.stopcar()
-    return match_with_orb(frame)
 
 def match_with_orb(frame):
     orb = cv2.ORB_create()
     _, descriptors_image = orb.detectAndCompute(frame, None)
 
     reference_images = {
-        "car_rotate_720": "car_rotate_720.PNG",
-        "car_stop_10s": "car_stop_10s.PNG",
-        "car_turn_around": "car_turn_around.PNG"}
+        "car_rotate_720": "car_rotate_720.png",
+        "car_stop_10s": "car_stop_10s.png",
+        "car_turn_around": "car_turn_around.png"}
 
     best_match, best_score = None, float("inf")
     bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
