@@ -145,6 +145,7 @@ try:
         
         # Process QR codes if detected:
         if qr_detector.detect(frame)[0]:  # True, wenn ein QR-Code erkannt wurde
+            robot.stopcar()
             if process_qr_code(frame, qr_detector):
                 continue
 
