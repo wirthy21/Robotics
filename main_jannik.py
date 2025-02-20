@@ -118,14 +118,18 @@ def execute_instruction(data):
 
     if data == "car_stop_10s":
         time.sleep(10)
+        return True
     elif data == "car_turn_around":
         qr_turn_speed = 0x5FFF
-        robot.changespeed(qr_turn_speed, qr_turn_speed)
-        time.sleep(0.5)
+        start_time_turn = time.time()  # Aktuelle Zeit speichern
+        while time.time() - start_time_turn < 0.5:
+            robot.changespeed(qr_turn_speed, qr_turn_speed)
+        return True
     elif data == "car_rotate_720":
         qr_turn_speed = 0x5FFF
-        robot.changespeed(qr_turn_speed, qr_turn_speed)
-        time.sleep(2)
+        start_time_rotate = time.time()  # Aktuelle Zeit speichern
+        while time.time() - start_time_rotate < 2:
+            robot.changespeed(qr_turn_speed, qr_turn_speed)
         return True
 
     return False
