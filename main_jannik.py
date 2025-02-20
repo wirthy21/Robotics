@@ -127,7 +127,7 @@ def execute_instruction(data):
         start_time_turn = time.time()
         picam2.stop()
         data = None
-        while time.time() - start_time_turn < 2:
+        while time.time() - start_time_turn < 1:
             robot.changespeed(qr_turn_speed, qr_turn_speed)
             robot.turnRight()
         picam2.start()    
@@ -137,7 +137,7 @@ def execute_instruction(data):
         start_time_rotate = time.time()
         picam2.stop()
         data = None
-        while time.time() - start_time_rotate < 8:
+        while time.time() - start_time_rotate < 4:
             robot.changespeed(qr_turn_speed, qr_turn_speed)
             robot.turnRight()
         picam2.start()
