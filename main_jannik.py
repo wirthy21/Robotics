@@ -147,8 +147,7 @@ try:
         if qr_detector.detect(frame)[0]:  # True, wenn ein QR-Code erkannt wurde
             print("QR Code detected")
             robot.stopcar()
-            if process_qr_code(frame, qr_detector):
-                continue
+            process_qr_code(frame, qr_detector)
 
         # Preprocess the frame to find the centroid of the line
         cx = preprocess_image(frame)
