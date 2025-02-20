@@ -117,7 +117,9 @@ def execute_instruction(data):
     print("Executing instruction:", data)
 
     if data == "car_stop_10s":
+        picam2.stop()
         time.sleep(10)
+        picam2.start()
         return True
     elif data == "car_turn_around":
         qr_turn_speed = 0x5FFF
