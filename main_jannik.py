@@ -37,7 +37,7 @@ try:
         
         # Stop if a duck is detected
         if fj.detect_duck(frame) == True:
-            robot.stopcar()
+            Robot.stopcar()
             continue
         
         # Process QR codes if detected
@@ -63,18 +63,18 @@ try:
             prev_speed_right = right_speed
 
             # Update the robot's movement
-            robot.changespeed(left_speed, right_speed)
-            robot.forward()
+            Robot.changespeed(left_speed, right_speed)
+            Robot.forward()
         else:
             # Stop and decide turning direction if no line is detected
-            robot.stopcar()
-            robot.changespeed(turn_speed, turn_speed)
+            Robot.stopcar()
+            Robot.changespeed(turn_speed, turn_speed)
             if prev_speed_left - prev_speed_right > -15000:
-                robot.turnRight()
+                Robot.turnRight()
             elif prev_speed_left - prev_speed_right < 15000:
-                robot.turnLeft()
+                Robot.turnLeft()
             else:
-                robot.stopcar()
+                Robot.stopcar()
 
         # Break the loop if 'q' is pressed
         if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -83,5 +83,5 @@ finally:
     # Cleanup resources after loop ends
     picam2.stop()
     cv2.destroyAllWindows()
-    robot.stopcar()
+    Robot.stopcar()
     print("Driving done!")
