@@ -128,7 +128,7 @@ def execute_instruction(data):
         start_time_turn = time.time()
         picam2.stop()
         data = None
-        while time.time() - start_time_turn < 0.8:
+        while time.time() - start_time_turn < 1:
             robot.changespeed(qr_turn_speed, qr_turn_speed)
             robot.turnRight()
         picam2.start()    
@@ -138,40 +138,12 @@ def execute_instruction(data):
         start_time_rotate = time.time()
         picam2.stop()
         data = None
-        while time.time() - start_time_rotate < 3:
+        while time.time() - start_time_rotate < 4:
             robot.changespeed(qr_turn_speed, qr_turn_speed)
             robot.turnRight()
         picam2.start()
         return True
     return False
-
-def detect_traffic_light(frame):
-    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-
-    # Red range (two ranges due to hue wrap-around)
-    lower_red1, upper_red1 = (0, 100, 100), (10, 255, 255)
-    lower_red2, upper_red2 = (160, 100, 100), (180, 255, 255)
-
-    # Yellow range
-    lower_yellow, upper_yellow = (20, 100, 100), (30, 255, 255)
-
-    # Green range
-    lower_green, upper_green = (40, 100, 100), (70, 255, 255)
-
-    # Masks
-    mask_red = cv2.inRange(hsv, lower_red1, upper_red1) + cv2.inRange(hsv, lower_red2, upper_red2)
-    mask_yellow = cv2.inRange(hsv, lower_yellow, upper_yellow)
-    mask_green = cv2.inRange(hsv, lower_green, upper_green)
-
-    # Area thresholds to avoid false positives
-    if cv2.countNonZero(mask_red) > 200:
-        return "red"
-    elif cv2.countNonZero(mask_yellow) > 200:
-        return "yellow"
-    elif cv2.countNonZero(mask_green) > 200:
-        return "green"
-    return None
-
 
 # Start the main loop
 start_time = time.time()
@@ -184,16 +156,6 @@ try:
         if detect_duck(frame) == True:
             robot.stopcar()
             continue
-        
-        # Traffic light detection
-        traffic_light = detect_traffic_light(frame)
-        if traffic_light == "red":
-            robot.stopcar()
-            continue
-        elif traffic_light == "yellow":
-            robot.changespeed(int(straight_speed * 0.5), int(straight_speed * 0.5))
-        elif traffic_light == "green":
-            pass
         
         # Process QR codes if detected:
         if qr_detector.detect(frame)[0]:
