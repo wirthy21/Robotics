@@ -16,11 +16,11 @@ frame_rate = 30
 video_duration = 120
 frame_width, frame_height = 640, 480
 turn_speed = 0x5FFF
-straight_speed = 0x6AFF
-max_speed = 0x7FFF
+straight_speed = 0x7AFF
+max_speed = 0x7AFF
 
 # Initialize PID controller for line following
-pid_direction = PID(Kp=100, Ki=340, Kd=9, setpoint=frame_width // 2)
+pid_direction = PID(Kp=264, Ki=528, Kd=33, setpoint=frame_width // 2)
 pid_direction.output_limits = (-max_speed // 2, max_speed // 2)
 
 # Track previous speeds to handle turns
@@ -145,6 +145,33 @@ def execute_instruction(data):
         return True
     return False
 
+def detect_traffic_light(frame):
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+
+    # Red range (two ranges due to hue wrap-around)
+    lower_red1, upper_red1 = (0, 100, 100), (10, 255, 255)
+    lower_red2, upper_red2 = (160, 100, 100), (180, 255, 255)
+
+    # Yellow range
+    lower_yellow, upper_yellow = (20, 100, 100), (30, 255, 255)
+
+    # Green range
+    lower_green, upper_green = (40, 100, 100), (70, 255, 255)
+
+    # Masks
+    mask_red = cv2.inRange(hsv, lower_red1, upper_red1) + cv2.inRange(hsv, lower_red2, upper_red2)
+    mask_yellow = cv2.inRange(hsv, lower_yellow, upper_yellow)
+    mask_green = cv2.inRange(hsv, lower_green, upper_green)
+
+    # Area thresholds to avoid false positives
+    if cv2.countNonZero(mask_red) > 200:
+        return "red"
+    elif cv2.countNonZero(mask_yellow) > 200:
+        return "yellow"
+    elif cv2.countNonZero(mask_green) > 200:
+        return "green"
+    return None
+
 
 # Start the main loop
 start_time = time.time()
@@ -157,6 +184,16 @@ try:
         if detect_duck(frame) == True:
             robot.stopcar()
             continue
+        
+        # Traffic light detection
+        traffic_light = detect_traffic_light(frame)
+        if traffic_light == "red":
+            robot.stopcar()
+            continue
+        elif traffic_light == "yellow":
+            robot.changespeed(int(straight_speed * 0.5), int(straight_speed * 0.5))
+        elif traffic_light == "green":
+            pass
         
         # Process QR codes if detected:
         if qr_detector.detect(frame)[0]:
